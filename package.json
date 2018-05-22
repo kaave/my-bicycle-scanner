@@ -49,6 +49,8 @@
   },
   "devDependencies": {
     "@types/jest": "^22.1.2",
+    "@types/react": "^16.3.14",
+    "@types/react-dom": "^16.0.5",
     "autoprefixer": "^7.2.6",
     "awesome-typescript-loader": "^5.0.0",
     "browser-sync": "^2.23.6",
@@ -103,6 +105,8 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "libraries-frontend-framelunch": "framelunch/libraries-frontend-framelunch#0.3.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "sanitize.css": "^5.0.0",
     "tslib": "^1.9.1"
   }
