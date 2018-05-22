@@ -42,7 +42,7 @@ module.exports = {
       template,
       filename: `${filename}.html`,
       inject: false,
-      conf: Object.assign({ viewPath: paths.view }, viewData.common, viewData[filename] ? viewData[filename] : {}),
+      conf: Object.assign({ viewPath: paths.view, isProduction: false }, viewData.common, viewData[filename] ? viewData[filename] : {}),
     })),
     new DashboardPlugin(),
     new BrowserSyncPlugin(
@@ -63,7 +63,6 @@ module.exports = {
   module: {
     rules: [...rules, ...appendRules],
   },
-  devtool: 'inline-source-map',
   devServer: {
     publicPath: output.publicPath,
     contentBase: [paths.assets],

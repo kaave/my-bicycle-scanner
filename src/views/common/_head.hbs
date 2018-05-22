@@ -27,9 +27,11 @@
   <meta name="twitter:site" content="{{{site}}}" />
   {{/with}}
 {{/if}}
-{{#if styles}}
-  {{#each styles}}
+{{#if isProduction}}
+  {{#if styles}}
+    {{#each styles}}
   <link rel="stylesheet" href="{{{this}}}">
-  {{/each}}
+    {{/each}}
+  {{/if}}
 {{/if}}
 </head>

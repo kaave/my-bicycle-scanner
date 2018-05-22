@@ -1,5 +1,3 @@
-/* eslint-disable import/first */
-
 import './common/initializer';
 
 import '../styles/index.css';
