@@ -25,11 +25,9 @@ const appendRules = [
         options: {
           babelrc: false,
           plugins: ['react-hot-loader/babel'],
-          // exclude: /node_modules/,
         },
       },
-      // loader: 'awesome-typescript-loader',
-      'ts-loader',
+      'awesome-typescript-loader',
     ],
   },
   { test: /\.js$/, use: 'source-map-loader', enforce: 'pre' },

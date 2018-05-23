@@ -1,4 +1,8 @@
-/* eslint-disable import/export */
+declare module '*.css' {
+  const classes: { [className: string]: string };
+
+  export default classes;
+}
 
 declare module '*.gif' {
   const content: string;
@@ -19,6 +23,18 @@ declare module '*.png' {
 }
 
 declare module '*.svg' {
+  const content: string;
+
+  export default content;
+}
+
+declare module '*.md' {
+  const content: string;
+
+  export default content;
+}
+
+declare module '*.txt' {
   const content: string;
 
   export default content;
