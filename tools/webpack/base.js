@@ -21,7 +21,7 @@ const imageMin = {
     floyd: 0,
     // フロイド-スタインバーグ・ディザリングを無効化するか
     // https://ja.wikipedia.org/wiki/%E3%83%95%E3%83%AD%E3%82%A4%E3%83%89-%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%B3%E3%83%90%E3%83%BC%E3%82%B0%E3%83%BB%E3%83%87%E3%82%A3%E3%82%B6%E3%83%AA%E3%83%B3%E3%82%B0
-    nofs: false
+    nofs: false,
   },
   jpg: {
     // クオリティ 0(やり過ぎ) ~ 100(ほぼそのまま)
@@ -50,18 +50,11 @@ module.exports = {
     publicPath: '/',
   },
   resolve: {
-    modules: [
-      'node_modules',
-    ],
-    extensions: ['json', '.tsx', '.ts', '.js'],
+    modules: ['node_modules'],
+    extensions: ['json', '.tsx', '.ts', '.css', '.js'],
   },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        loader: 'awesome-typescript-loader',
-      },
       {
         test: /\.hbs$/,
         loader: 'handlebars-loader',
@@ -69,7 +62,7 @@ module.exports = {
           helperDirs: path.join(paths.view, 'helpers'),
           precompileOptions: {
             knownHelpersOnly: false,
-          }
+          },
         },
       },
       {
@@ -78,8 +71,8 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              name: '[name].[ext]'
-            }
+              name: '[name].[ext]',
+            },
           },
           {
             loader: 'image-webpack-loader',
@@ -98,11 +91,11 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        use: 'svg-inline-loader'
+        use: 'svg-inline-loader',
       },
       {
         test: /\.(txt|md)$/,
-        use: 'raw-loader'
+        use: 'raw-loader',
       },
     ],
   },
@@ -117,11 +110,10 @@ module.exports = {
    */
   paths,
   imageMin,
-  views: globby.sync([
-    path.join(paths.view, '**', '*.hbs'),
-    path.join('!', paths.view, '**', '_*.hbs'),
-  ]).map(template => ({
-    template,
-    filename: template.replace(`${paths.view}/`, '').replace(/\.hbs$/, ''),
-  })),
+  views: globby
+    .sync([path.join(paths.view, '**', '*.hbs'), path.join('!', paths.view, '**', '_*.hbs')])
+    .map(template => ({
+      template,
+      filename: template.replace(`${paths.view}/`, '').replace(/\.hbs$/, ''),
+    })),
 };

@@ -11,6 +11,11 @@ const viewData = require(path.join(paths.view, '/data.json'));
 
 const appendRules = [
   {
+    test: /\.tsx?$/,
+    exclude: /node_modules/,
+    loader: 'awesome-typescript-loader',
+  },
+  {
     test: /\.css$/,
     use: ExtractTextPlugin.extract({
       fallback: 'style-loader',

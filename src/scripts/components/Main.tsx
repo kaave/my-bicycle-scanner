@@ -1,9 +1,15 @@
 import React from 'react';
+import CSSModules from 'react-css-modules';
 
-export default function Main() {
+import styles from './main.css';
+
+export default CSSModules(function Main() {
+  console.log(styles);
+
   return (
-    <main id="main" className="main" role="main">
-      Main!!!!
+    <main id="main" styleName="main" role="main">
+      <h1 styleName="header">Header</h1>
+      Main!!!!!!!
     </main>
   );
-}
+}, styles);
