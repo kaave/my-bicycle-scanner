@@ -1,13 +1,15 @@
-const fs = require('fs');
-const path = require('path');
-const globby = require('globby');
-const webpack = require('webpack');
+import path from 'path';
+import globby from 'globby';
+import * as webpack from 'webpack';
+
+import viewData from '../../src/views/data.json';
 
 const paths = {
   build: path.join(process.cwd(), 'build'),
   assets: path.join(process.cwd(), 'assets'),
   script: path.join(process.cwd(), 'src', 'scripts'),
   view: path.join(process.cwd(), 'src', 'views'),
+  lib: '',
 };
 paths.lib = path.join(paths.assets, 'lib');
 
@@ -35,75 +37,78 @@ const imageMin = {
   },
 };
 
-const entry = {
+const entry: webpack.Entry = {
   index: path.join(paths.script, 'index.ts'),
 };
 
-module.exports = {
+const output: webpack.Output = {
+  path: paths.build,
+  filename: 'js/[name].js',
+  publicPath: '/',
+};
+
+const resolve: webpack.Resolve = {
+  modules: ['node_modules'],
+  extensions: ['json', '.tsx', '.ts', '.css', '.js'],
+};
+
+const rules: webpack.Rule[] = [
+  {
+    test: /\.hbs$/,
+    loader: 'handlebars-loader',
+    options: {
+      helperDirs: path.join(paths.view, 'helpers'),
+      precompileOptions: {
+        knownHelpersOnly: false,
+      },
+    },
+  },
+  {
+    test: /\.(jpg|png|gif)$/,
+    use: [
+      {
+        loader: 'url-loader',
+        options: {
+          name: '[name].[ext]',
+        },
+      },
+      {
+        loader: 'image-webpack-loader',
+        options: {
+          // bypassOnDebug: true,
+          mozjpeg: imageMin.jpg,
+          optipng: { enabled: false },
+          pngquant: imageMin.png,
+          gifsicle: imageMin.gif,
+        },
+      },
+    ],
+  },
+  {
+    test: /\.svg$/,
+    use: 'svg-inline-loader',
+  },
+  {
+    test: /\.(txt|md)$/,
+    use: 'raw-loader',
+  },
+];
+
+const plugins: webpack.Plugin[] = [
+  new webpack.DefinePlugin({
+    NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+  }),
+];
+
+export default {
   /*
    * webpack configs
    */
   entry,
-  output: {
-    path: paths.build,
-    filename: 'js/[name].js',
-    publicPath: '/',
-  },
-  resolve: {
-    modules: ['node_modules'],
-    extensions: ['json', '.tsx', '.ts', '.css', '.js'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.hbs$/,
-        loader: 'handlebars-loader',
-        options: {
-          helperDirs: path.join(paths.view, 'helpers'),
-          precompileOptions: {
-            knownHelpersOnly: false,
-          },
-        },
-      },
-      {
-        test: /\.(jpg|png|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              name: '[name].[ext]',
-            },
-          },
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              // bypassOnDebug: true,
-              mozjpeg: imageMin.jpg,
-              // optipng.enabled: false will disable optipng
-              optipng: {
-                enabled: false,
-              },
-              pngquant: imageMin.png,
-              gifsicle: imageMin.gif,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.svg$/,
-        use: 'svg-inline-loader',
-      },
-      {
-        test: /\.(txt|md)$/,
-        use: 'raw-loader',
-      },
-    ],
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    }),
-  ],
+  output,
+  resolve,
+  module: { rules },
+  plugins,
 
   /*
    * not webpack configs
@@ -112,8 +117,9 @@ module.exports = {
   imageMin,
   views: globby
     .sync([path.join(paths.view, '**', '*.hbs'), path.join('!', paths.view, '**', '_*.hbs')])
-    .map(template => ({
+    .map((template: string) => ({
       template,
       filename: template.replace(`${paths.view}/`, '').replace(/\.hbs$/, ''),
-    })),
+    })) as Array<{ template: string; filename: string }>,
+  viewData,
 };

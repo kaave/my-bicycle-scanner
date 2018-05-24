@@ -26,8 +26,8 @@
         "member-access": [false],
         // クラスのメンバをa-z順 めんどくさすぎるので無効化
         "member-ordering": [false],
-        // 変数名予約語禁止、lowerCase or UPPER_CASE、アンスコ始まりOK
-        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+        // 変数名予約語禁止、lowerCase or UPPER_CASE or PascalCase、アンスコ始まりOK
+        "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-cas", "allow-leading-underscore"],
 
         /*
        * enable prettier

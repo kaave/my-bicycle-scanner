@@ -1,8 +1,9 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+import * as webpack from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import DashboardPlugin from 'webpack-dashboard/plugin';
+import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
+
+import base from './base';
 
 const {
   entry,
@@ -12,10 +13,10 @@ const {
   plugins,
   views,
   paths,
-} = require('./base');
-const viewData = require(path.join(paths.view, '/data.json'));
+  viewData,
+} = base;
 
-const appendRules = [
+const appendRules: webpack.Rule[] = [
   {
     test: /\.tsx?$/,
     exclude: /node_modules/,
@@ -54,17 +55,20 @@ const appendRules = [
   },
 ];
 
-module.exports = {
+export default {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: Object.entries(entry).reduce((tmp, [key, value]) => {
-    tmp[key] = [
-      'webpack-dev-server/client?http://localhost:13000',
-      'webpack/hot/only-dev-server',
-      ...(typeof value === 'string' ? [value] : value),
-    ];
-    return tmp;
-  }, {}),
+  entry: Object.entries(entry).reduce(
+    (tmp, [key, value]) => {
+      tmp[key] = [
+        'webpack-dev-server/client?http://localhost:13000',
+        'webpack/hot/only-dev-server',
+        ...(value instanceof Array ? value : [value]),
+      ];
+      return tmp;
+    },
+    {} as { [key: string]: string[] },
+  ),
   output,
   resolve,
   plugins: [
@@ -76,11 +80,12 @@ module.exports = {
           template,
           filename: `${filename}.html`,
           inject: false,
-          conf: Object.assign(
-            { viewPath: paths.view, isProduction: false },
-            viewData.common,
-            viewData[filename] ? viewData[filename] : {},
-          ),
+          conf: {
+            viewPath: paths.view,
+            isProduction: false,
+            ...viewData.common,
+            ...(viewData[filename] ? viewData[filename] : {}),
+          },
         }),
     ),
     new DashboardPlugin(),
@@ -104,4 +109,4 @@ module.exports = {
     contentBase: [paths.assets],
     port: 13000,
   },
-};
+} as webpack.Configuration;
