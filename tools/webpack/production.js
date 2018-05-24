@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { default: ImageminPlugin } = require('imagemin-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const LicenseInfoWebpackPlugin = require('license-info-webpack-plugin').default;
@@ -35,20 +35,18 @@ const appendRules = [
   },
   {
     test: /\.css$/,
-    use: ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      use: [
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 1,
-            modules: true,
-            localIdentName: '[name]__[local]--[hash:base64:5]',
-          },
+    use: [
+      MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+          modules: true,
+          localIdentName: '[name]__[local]--[hash:base64:5]',
         },
-        'postcss-loader',
-      ],
-    }),
+      },
+      'postcss-loader',
+    ],
   },
 ];
 
@@ -70,7 +68,10 @@ module.exports = {
       pngquant: imageMin.png,
       plugins: [imageminMozjpeg(imageMin.jpg)],
     }),
-    new ExtractTextPlugin('css/[name].css'),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].css',
+      chunkFilename: 'css/[id].css',
+    }),
     ...views.map(
       ({ template, filename }) =>
         new HtmlWebpackPlugin({
