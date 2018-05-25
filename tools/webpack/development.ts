@@ -3,18 +3,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import DashboardPlugin from 'webpack-dashboard/plugin';
 import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 
-import base from './base';
-
-const {
-  entry,
-  output,
-  resolve,
-  module: { rules },
-  plugins,
-  views,
-  paths,
-  viewData,
-} = base;
+import { entry, output, resolve, rules, plugins, views, paths } from './base';
+import viewData from '../../src/views/data.json';
 
 const appendRules: webpack.Rule[] = [
   {

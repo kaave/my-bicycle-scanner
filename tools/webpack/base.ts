@@ -4,16 +4,14 @@ import * as webpack from 'webpack';
 
 import viewData from '../../src/views/data.json';
 
-const paths = {
+export const paths = {
   build: path.join(process.cwd(), 'build'),
   assets: path.join(process.cwd(), 'assets'),
   script: path.join(process.cwd(), 'src', 'scripts'),
   view: path.join(process.cwd(), 'src', 'views'),
-  lib: '',
 };
-paths.lib = path.join(paths.assets, 'lib');
 
-const imageMin = {
+export const imageMin = {
   png: {
     // クオリティ 0(やり過ぎ) ~ 100(ほぼそのまま) -で繋いで2つ書くとmin-maxという意味合いらしいがよくわかりません
     quality: '65-80',
@@ -37,22 +35,22 @@ const imageMin = {
   },
 };
 
-const entry: webpack.Entry = {
+export const entry: webpack.Entry = {
   index: path.join(paths.script, 'index.ts'),
 };
 
-const output: webpack.Output = {
+export const output: webpack.Output = {
   path: paths.build,
   filename: 'js/[name].js',
   publicPath: '/',
 };
 
-const resolve: webpack.Resolve = {
+export const resolve: webpack.Resolve = {
   modules: ['node_modules'],
   extensions: ['json', '.tsx', '.ts', '.css', '.js'],
 };
 
-const rules: webpack.Rule[] = [
+export const rules: webpack.Rule[] = [
   {
     test: /\.hbs$/,
     loader: 'handlebars-loader',
@@ -94,32 +92,19 @@ const rules: webpack.Rule[] = [
   },
 ];
 
-const plugins: webpack.Plugin[] = [
+export const plugins: webpack.Plugin[] = [
   new webpack.DefinePlugin({
     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
   }),
 ];
 
-export default {
-  /*
-   * webpack configs
-   */
-  entry,
-  output,
-  resolve,
-  module: { rules },
-  plugins,
+export const views = globby
+  .sync([path.join(paths.view, '**', '*.hbs'), path.join('!', paths.view, '**', '_*.hbs')])
+  .map((template: string) => ({
+    template,
+    filename: template.replace(`${paths.view}/`, '').replace(/\.hbs$/, ''),
+  })) as Array<{ template: string; filename: string }>;
 
-  /*
-   * not webpack configs
-   */
-  paths,
-  imageMin,
-  views: globby
-    .sync([path.join(paths.view, '**', '*.hbs'), path.join('!', paths.view, '**', '_*.hbs')])
-    .map((template: string) => ({
-      template,
-      filename: template.replace(`${paths.view}/`, '').replace(/\.hbs$/, ''),
-    })) as Array<{ template: string; filename: string }>,
+export default {
   viewData,
 };

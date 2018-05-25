@@ -7,19 +7,8 @@ import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import LicenseInfoWebpackPlugin from 'license-info-webpack-plugin';
 import imageminMozjpeg from 'imagemin-mozjpeg';
 
-import base from './base';
-
-const {
-  entry,
-  output,
-  resolve,
-  module: { rules },
-  plugins,
-  views,
-  paths,
-  imageMin,
-  viewData,
-} = base;
+import { entry, output, resolve, rules, plugins, views, paths, imageMin } from './base';
+import viewData from '../../src/views/data.json';
 
 const appendRules: webpack.Rule[] = [
   {
