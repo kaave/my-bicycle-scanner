@@ -52,16 +52,6 @@ export const resolve: webpack.Resolve = {
 
 export const rules: webpack.Rule[] = [
   {
-    test: /\.hbs$/,
-    loader: 'handlebars-loader',
-    options: {
-      helperDirs: path.join(paths.view, 'helpers'),
-      precompileOptions: {
-        knownHelpersOnly: false,
-      },
-    },
-  },
-  {
     test: /\.(jpg|png|gif)$/,
     use: [
       {
@@ -90,6 +80,16 @@ export const rules: webpack.Rule[] = [
     test: /\.(txt|md)$/,
     use: 'raw-loader',
   },
+  {
+    test: /\.ejs$/,
+    use: [
+      'html-loader',
+      {
+        loader: 'ejs-html-loader',
+        options: { ...viewData, isProduction: process.env.NODE_ENV === 'production' },
+      },
+    ],
+  },
 ];
 
 export const plugins: webpack.Plugin[] = [
@@ -99,12 +99,8 @@ export const plugins: webpack.Plugin[] = [
 ];
 
 export const views = globby
-  .sync([path.join(paths.view, '**', '*.hbs'), path.join('!', paths.view, '**', '_*.hbs')])
+  .sync([path.join(paths.view, '**', '*.ejs'), path.join('!', paths.view, '**', '_*.ejs')])
   .map((template: string) => ({
     template,
-    filename: template.replace(`${paths.view}/`, '').replace(/\.hbs$/, ''),
+    filename: template.replace(`${paths.view}/`, '').replace(/\.ejs$/, ''),
   })) as Array<{ template: string; filename: string }>;
-
-export default {
-  viewData,
-};

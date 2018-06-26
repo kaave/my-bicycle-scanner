@@ -4,7 +4,6 @@ import DashboardPlugin from 'webpack-dashboard/plugin';
 import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 
 import { entry, output, resolve, rules, plugins, views, paths } from './base';
-import viewData from '../../src/views/data.json';
 
 const appendRules: webpack.Rule[] = [
   {
@@ -70,12 +69,6 @@ export default {
           template,
           filename: `${filename}.html`,
           inject: false,
-          conf: {
-            viewPath: paths.view,
-            isProduction: false,
-            ...viewData.common,
-            ...(viewData[filename] ? viewData[filename] : {}),
-          },
         }),
     ),
     new DashboardPlugin(),
@@ -83,7 +76,7 @@ export default {
       {
         host: 'localhost',
         port: 3000,
-        files: ['src/views/**/*.hbs', 'assets/**/*'],
+        files: ['src/views/**/*.ejs', 'assets/**/*'],
         proxy: 'http://localhost:13000',
       },
       {

@@ -1,0 +1,29 @@
+<%
+const configs = {
+  title: 'top',
+  description: 'This is top page',
+  styles: ['/css/index.css'],
+  scripts: ['/js/index.js'],
+  metaImage: 'https://dummyimage.com/600x400/333/ddd.png&text=Dummy+image',
+  og: {
+    type: 'blog',
+    image: 'https://dummyimage.com/600x400/333/ddd.png&text=Dummy+image',
+    siteName: 'Testsite',
+    url: 'http://aaa.com',
+  },
+  twitter: {
+    card: 'https://dummyimage.com/600x400/333/ddd.png&text=Dummy+image',
+    site: 'http://aaa.com',
+  },
+  ga: '__GA__',
+};
+%>
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<%- include('common/_head.ejs', { ...configs }) %>
+<body>
+  ↓MountPoint
+  <div id="mount-point"></div>
+  <%- include('common/_foot.ejs', { ...configs }) %>
+</body>
+</html>
